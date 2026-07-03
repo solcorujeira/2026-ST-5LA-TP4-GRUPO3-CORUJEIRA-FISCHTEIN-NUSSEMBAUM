@@ -23,7 +23,6 @@ enum Estados {
   ESPERA_1,
   PANTALLA_2,
   SUMA,
-  RESTA,
   ESPERA_2
 };
 Estados estado = PANTALLA_1;
@@ -82,12 +81,13 @@ void loop() {
     case PANTALLA_2:
       u8g2.clearBuffer();
       imprimirUmbral(umbral);
-      if (digitalRead(BOTON_1) == LOW) {
+      if (digitalRead(BOTON_1) == LOW && millis() - tiempoAnterior >= 2000){
         estado = SUMA;
         Serial.println("Suma");
       }
       if (digitalRead(BOTON_2) == LOW) {
-        estado = RESTA;
+        tiempoAnterior = millis();
+        estado = ESPERA_2;
         Serial.println("Resta");
       }
       break;
@@ -100,19 +100,6 @@ void loop() {
         Serial.println("Pantalla 2");
       }
       if (digitalRead(BOTON_2) == LOW) {
-        estado = ESPERA_2;
-        tiempoAnterior = millis();
-        Serial.println("Espera 2");
-      }
-      break;
-
-    case RESTA:
-      if (digitalRead(BOTON_2) == HIGH) {
-        estado = PANTALLA_2;
-        umbral--;
-        Serial.println("Pantalla 2");
-      }
-      if (digitalRead(BOTON_1) == LOW) {
         estado = ESPERA_2;
         tiempoAnterior = millis();
         Serial.println("Espera 2");
@@ -139,6 +126,7 @@ void loop() {
 
       else if (digitalRead(BOTON_2) == HIGH) {
         estado = PANTALLA_2;
+        umbral--;
         Serial.println("Pantalla 2");
       }
       break;
@@ -162,7 +150,7 @@ void imprimirUmbral(int tempUmbral) {
   sprintf(sumb, "%d", tempUmbral);
   u8g2.setFont(u8g2_font_6x10_tr);
   u8g2.drawStr(10, 50, "VU: ");
-  u8g2.drawStr(60, 50, sumb);
-  u8g2.drawStr(80, 50, "°C");
+  u8g2.drawStr(30, 50, sumb);
+  u8g2.drawStr(50, 50, "°C");
   u8g2.sendBuffer();
 }
