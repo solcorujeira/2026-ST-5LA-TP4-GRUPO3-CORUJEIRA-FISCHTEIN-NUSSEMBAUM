@@ -70,9 +70,9 @@ void loop() {
         estado = PANTALLA_2;
         tiempoAnterior = millis();
         Serial.println("Pantalla 2");
-      } 
+      }
 
-      else if (digitalRead(BOTON_1) == HIGH){
+      else if (digitalRead(BOTON_1) == HIGH) {
         estado = PANTALLA_1;
         Serial.println("Pantalla 1");
       }
@@ -96,11 +96,12 @@ void loop() {
       if (digitalRead(BOTON_1) == HIGH) {
         estado = PANTALLA_2;
         umbral++;
-    
+
         Serial.println("Pantalla 2");
       }
       if (digitalRead(BOTON_2) == LOW) {
         estado = ESPERA_2;
+        tiempoAnterior = millis();
         Serial.println("Espera 2");
       }
       break;
@@ -130,17 +131,19 @@ void loop() {
           EEPROM.put(0, umbral);
           EEPROM.commit();
           umbralGuardado = umbral;
-        }       
+        }
 
         estado = PANTALLA_1;
         Serial.println("Pantalla 1");
+      }
 
-        else if(digitalRead(BOTON_2) == HIGH){
-          estado = PANTALLA_2;
-          Serial.println("Pantalla 2");
+      else if (digitalRead(BOTON_2) == HIGH) {
+        estado = PANTALLA_2;
+        Serial.println("Pantalla 2");
       }
       break;
   }
+}
 
 void imprimirTemp(int temperatura) {
   u8g2.clearBuffer();  // clear the internal memory
@@ -162,5 +165,4 @@ void imprimirUmbral(int tempUmbral) {
   u8g2.drawStr(60, 50, sumb);
   u8g2.drawStr(80, 50, "°C");
   u8g2.sendBuffer();
-}
 }
